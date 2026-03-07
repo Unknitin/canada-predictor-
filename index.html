@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Manish Sahuu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+:root {
+  --bg: #060606;
+  --gold: #c8923a;
+  --gold-hi: #e2b866;
+  --gold-glow: rgba(200,146,58,0.22);
+  --white: #f4f0ea;
+  --dim: rgba(244,240,234,0.35);
+  --faint: rgba(244,240,234,0.07);
+}
+
+html, body { height:100%; background:var(--bg); overflow-x:hidden; }
+
+body {
+  font-family:'Jost', sans-serif;
+  min-height:100vh;
+  display:flex; flex-direction:column; align-items:center;
+}
+
+/* subtle grain */
+body::after {
+  content:''; position:fixed; inset:0; z-index:99; pointer-events:none;
+  opacity:0.35;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.055'/%3E%3C/svg%3E");
+}
+
+/* ambient top glow */
+.glow {
+  position:fixed; top:-140px; left:50%; transform:translateX(-50%);
+  width:520px; height:300px;
+  background:radial-gradient(ellipse, rgba(200,146,58,0.13) 0%, transparent 65%);
+  pointer-events:none; z-index:0;
+}
+
+.page {
+  position:relative; z-index:1;
+  width:100%; max-width:390px;
+  min-height:100vh;
+  display:flex; flex-direction:column; align-items:center;
+  padding:0 24px 56px;
+}
+
+/* ── LIVE BADGE ── */
+.badge {
+  display:flex; align-items:center; gap:7px;
+  margin-top:26px;
+  opacity:0; animation:up 0.6s 0.05s ease forwards;
+}
+.dot {
+  width:6px; height:6px; border-radius:50%;
+  background:#3ecf74;
+  animation:ping 2.4s infinite;
+}
+@keyframes ping {
+  0%   { box-shadow:0 0 0 0 rgba(62,207,116,0.55); }
+  70%  { box-shadow:0 0 0 8px rgba(62,207,116,0); }
+  100% { box-shadow:0 0 0 0 rgba(62,207,116,0); }
+}
+.badge-txt {
+  font-size:10px; font-weight:400; letter-spacing:0.2em;
+  text-transform:uppercase; color:#3ecf74;
+}
+
+/* ── AVATAR ── */
+.av-wrap {
+  margin-top:34px; position:relative;
+  opacity:0; animation:up 0.7s 0.18s ease forwards;
+}
+.halo {
+  position:absolute; inset:-28px; border-radius:50%;
+  background:radial-gradient(circle, rgba(200,146,58,0.2) 0%, transparent 60%);
+  animation:gp 3.2s ease-in-out infinite;
+}
+@keyframes gp { 0%,100%{opacity:.6;transform:scale(1)} 50%{opacity:1;transform:scale(1.08)} }
+
+.ring {
+  position:absolute; inset:-11px; border-radius:50%;
+  border:1px dashed rgba(200,146,58,0.4);
+  animation:spin 18s linear infinite;
+}
+@keyframes spin { to { transform:rotate(360deg); } }
+
+.av {
+  width:108px; height:108px; border-radius:50%;
+  position:relative; z-index:1; overflow:hidden;
+  border:2px solid rgba(200,146,58,0.5);
+  background:linear-gradient(150deg,#1a1510,#0c0b08);
+  display:flex; align-items:center; justify-content:center;
+}
+.av img { width:100%; height:100%; object-fit:cover; object-position:top; display:block; }
+.av-ph {
+  display:flex; flex-direction:column; align-items:center; gap:5px;
+}
+.av-ph svg { opacity:0.22; }
+.av-ph p {
+  font-size:8px; letter-spacing:0.12em; color:rgba(255,255,255,0.16);
+  text-transform:uppercase;
+}
+
+/* ── NAME ── */
+.name-block {
+  margin-top:22px; text-align:center;
+  opacity:0; animation:up 0.7s 0.3s ease forwards;
+}
+.name {
+  font-family:'Cormorant Garamond', serif;
+  font-size:44px; font-weight:600; line-height:1;
+  letter-spacing:0.01em; color:var(--white);
+}
+.name em { font-style:italic; color:var(--gold-hi); }
+
+.sub {
+  margin-top:8px;
+  font-size:10.5px; font-weight:300; letter-spacing:0.22em;
+  text-transform:uppercase; color:rgba(244,240,234,0.22);
+}
+
+/* ── RULE ── */
+.rule {
+  width:32px; height:1px;
+  background:linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin:20px auto 0;
+  opacity:0; animation:up 0.6s 0.38s ease forwards;
+}
+
+/* ── TAGLINE ── */
+.tag {
+  margin-top:16px; text-align:center; max-width:266px;
+  font-family:'Cormorant Garamond', serif;
+  font-size:17px; font-weight:400; font-style:italic;
+  color:rgba(244,240,234,0.42); line-height:1.7;
+  opacity:0; animation:up 0.7s 0.42s ease forwards;
+}
+
+/* ── STATS ── */
+.stats {
+  display:flex; width:100%;
+  margin-top:28px; border-radius:14px; overflow:hidden;
+  border:1px solid rgba(244,240,234,0.07);
+  opacity:0; animation:up 0.7s 0.5s ease forwards;
+}
+.stat {
+  flex:1; padding:16px 6px; text-align:center;
+  background:rgba(244,240,234,0.025);
+}
+.stat + .stat { border-left:1px solid rgba(244,240,234,0.06); }
+.sn {
+  font-family:'Cormorant Garamond', serif;
+  font-size:24px; font-weight:600; color:var(--gold-hi); line-height:1;
+}
+.sl {
+  margin-top:5px; font-size:9px; text-transform:uppercase;
+  letter-spacing:0.13em; color:rgba(244,240,234,0.22); font-weight:400;
+}
+
+/* ── CTA ── */
+.cta {
+  width:100%; margin-top:36px;
+  display:flex; flex-direction:column; align-items:center; gap:11px;
+  opacity:0; animation:up 0.8s 0.6s ease forwards;
+}
+.cta-lbl {
+  font-size:9px; letter-spacing:0.22em; text-transform:uppercase;
+  color:rgba(244,240,234,0.18); font-weight:400;
+}
+
+/* Main button */
+.btn-main {
+  width:100%; display:flex; align-items:center; justify-content:center; gap:11px;
+  padding:17px 20px;
+  background:linear-gradient(130deg, #c8923a 0%, #e2c060 50%, #c07830 100%);
+  border:none; border-radius:13px; text-decoration:none; cursor:pointer;
+  position:relative; overflow:hidden;
+  box-shadow:0 6px 28px rgba(200,146,58,0.36), inset 0 0 0 1px rgba(255,255,255,0.1);
+  transition:transform 0.15s, box-shadow 0.15s;
+}
+.btn-main::before {
+  content:''; position:absolute; top:0; left:-70%;
+  width:36%; height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.22),transparent);
+  transform:skewX(-18deg);
+  animation:sh 4s 2.2s infinite;
+}
+@keyframes sh { 0%{left:-70%} 100%{left:145%} }
+.btn-main:active { transform:scale(0.97); box-shadow:0 3px 14px rgba(200,146,58,0.25); }
+
+/* Telegram SVG logo */
+.tg-icon {
+  width:22px; height:22px; flex-shrink:0;
+}
+
+.btn-text {
+  font-family:'Jost', sans-serif;
+  font-size:15px; font-weight:500;
+  color:#160b00; letter-spacing:0.04em;
+}
+
+/* Secondary button */
+.btn-sec {
+  width:100%; display:flex; align-items:center; justify-content:center; gap:7px;
+  padding:14px 20px; background:transparent;
+  border:1px solid rgba(244,240,234,0.09); border-radius:13px;
+  text-decoration:none; cursor:pointer;
+  transition:background 0.2s, border-color 0.2s;
+}
+.btn-sec:active { background:rgba(244,240,234,0.04); border-color:rgba(244,240,234,0.18); }
+.btn-sec-t {
+  font-size:13px; font-weight:300; letter-spacing:0.05em;
+  color:rgba(244,240,234,0.3);
+}
+.arr { color:rgba(244,240,234,0.18); font-size:13px; }
+
+/* Risk */
+.risk {
+  margin-top:4px; text-align:center; font-size:9.5px;
+  color:rgba(244,240,234,0.12); line-height:1.75; max-width:290px;
+}
+
+/* ── ADS FOOTER ── */
+.ads-wrap {
+  margin-top:auto; padding-top:44px;
+  text-align:center;
+  opacity:0; animation:up 0.7s 0.7s ease forwards;
+}
+.ads-lbl {
+  font-size:9px; letter-spacing:0.2em; text-transform:uppercase;
+  color:rgba(244,240,234,0.15); font-weight:400; margin-bottom:7px;
+}
+.ads-link {
+  display:inline-flex; align-items:center; gap:6px;
+  text-decoration:none;
+  font-size:12px; font-weight:400; letter-spacing:0.06em;
+  color:rgba(244,240,234,0.3);
+  border-bottom:1px solid rgba(244,240,234,0.1);
+  padding-bottom:2px;
+  transition:color 0.2s, border-color 0.2s;
+}
+.ads-link:hover { color:var(--gold-hi); border-color:var(--gold); }
+.ads-link svg { width:13px; height:13px; opacity:0.5; }
+
+.foot {
+  margin-top:22px; font-size:9px;
+  color:rgba(244,240,234,0.09); letter-spacing:0.1em; text-align:center;
+}
+
+/* animation */
+@keyframes up {
+  from { opacity:0; transform:translateY(16px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+</style>
+</head>
+<body>
+<div class="glow"></div>
+
+<div class="page">
+
+  <!-- Live badge -->
+  <div class="badge">
+    <div class="dot"></div>
+    <span class="badge-txt">Channel Active · 1,772 Members</span>
+  </div>
+
+  <!-- Avatar -->
+  <div class="av-wrap">
+    <div class="halo"></div>
+    <div class="ring"></div>
+    <div class="av">
+      <!--
+        ✏️ ADD YOUR PHOTO — remove the av-ph block and add:
+        <img src="YOUR_IMAGE_URL" alt="Manish Sahuu">
+      -->
+      <div class="av-ph">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(200,146,58,0.65)" stroke-width="1.2">
+          <circle cx="12" cy="8" r="4"/>
+          <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+        </svg>
+        <p>Your Photo</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Name -->
+  <div class="name-block">
+    <div class="name">Manish <em>Sahuu</em></div>
+
+  </div>
+
+  <div class="rule"></div>
+
+  <!-- Tagline -->
+  <p class="tag">"Signals that speak, results that show."</p>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat">
+      <div class="sn">95%</div>
+      <div class="sl">Win Rate</div>
+    </div>
+    <div class="stat">
+      <div class="sn">1.7K+</div>
+      <div class="sl">Members</div>
+    </div>
+    <div class="stat">
+      <div class="sn">Free</div>
+      <div class="sl">Always</div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta">
+    <div class="cta-lbl">Join the community</div>
+
+    <a href="https://t.me/+your_invite_link" class="btn-main">
+      <!-- Telegram SVG logo -->
+      <svg class="tg-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="12" r="10" fill="#160b00"/>
+        <path d="M17.707 7.782L15.47 18.27c-.17.75-.614.933-1.245.58l-3.45-2.542-1.664 1.6c-.184.184-.338.338-.693.338l.247-3.508 6.38-5.762c.277-.246-.06-.384-.43-.138L6.89 13.98l-3.4-1.063c-.74-.23-.753-.74.153-1.096l13.288-5.122c.614-.222 1.152.138.776 1.083z" fill="#c8923a"/>
+      </svg>
+      <span class="btn-text">Join Free on Telegram</span>
+    </a>
+
+    <a href="https://okwinslots4.com/#/register?invitationCode=4886715320393" class="btn-sec">
+      <span class="btn-sec-t">Register on Platform</span>
+      <span class="arr">→</span>
+    </a>
+
+    <p class="risk">⚠ Trading involves financial risk. Past performance does not guarantee future results.</p>
+  </div>
+
+  <!-- Ads footer -->
+  <div class="ads-wrap">
+    <div class="ads-lbl">For Ads</div>
+    <a href="https://t.me/m/wB5vKaUzZDhl" class="ads-link">
+      <!-- Telegram icon small -->
+      <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.707 6.782-2.236 10.487c-.17.75-.614.933-1.245.58l-3.45-2.542-1.664 1.6c-.184.184-.338.338-.693.338l.247-3.508 6.38-5.762c.277-.246-.06-.384-.43-.138L6.89 13.98l-3.4-1.063c-.74-.23-.753-.74.153-1.096l13.288-5.122c.614-.222 1.152.138.776 1.083z"/>
+      </svg>
+      @TeamUnkLeader
+    </a>
+  </div>
+
+  <div class="foot">© 2025 Manish Sahuu</div>
+
+</div>
+</body>
+</html>
